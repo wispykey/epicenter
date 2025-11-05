@@ -102,38 +102,46 @@ func play_pulse_animation_tween(node: Node2D):
 
 func _on_first_beat_pulse_ring1(_count):
 	play_pulse_animation_tween($Ring1)
-	pass
+	
 	
 func _on_second_beat_pulse_ring2(_count):
 	play_pulse_animation_tween($Ring2)
-	pass
+	
 	
 func _on_third_beat_pulse_ring3(_count):
 	play_pulse_animation_tween($Ring3)
-	pass
+
 	
 func _on_fourth_beat_pulse_ring4(_count):
 	play_pulse_animation_tween($Ring4)
-	pass
+
 
 func update_indicator_sizes():
 	var measure_length = Conductor.beat_length * TIME_SIGNATURE_NUMERATOR
 	
-	for indicator in $BeatIndicators.get_children():
+	for indicator in $OuterBeatIndicators.get_children():
 		var t = indicator.measure_time_elapsed / (measure_length * indicator.extra_duration_ratio)
 		var new_scale = indicator.start_scale.x + lerp(0.0, indicator.end_scale.x, t)
+		indicator.scale = Vector2(new_scale, new_scale)
+		
+	for indicator in $InnerBeatIndicators.get_children():
+		var t = indicator.measure_time_elapsed / (measure_length * indicator.extra_duration_ratio)
+		var lerp_output = lerp(0.0, indicator.end_scale.x, t)
+		var eased_lerp_output = ease(lerp_output, 0.8)
+		var new_scale = indicator.start_scale.x + eased_lerp_output
 		indicator.scale = Vector2(new_scale, new_scale)
 		
 	for marker in $BeatMarkers.get_children():
 		var t = marker.measure_time_elapsed / (measure_length * marker.extra_duration_ratio)
 		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
-		print(lerp_progress)
 		var new_scale = lerp_progress
 		marker.indicator.scale = Vector2(new_scale, new_scale)
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
 	var step = (Conductor.beat_length / 16.0)
-	for indicator in $BeatIndicators.get_children():
+	for indicator in $InnerBeatIndicators.get_children():
+		indicator.measure_time_elapsed += step
+	for indicator in $OuterBeatIndicators.get_children():
 		indicator.measure_time_elapsed += step
 	for indicator in $BeatMarkers.get_children():
 		indicator.measure_time_elapsed += step
@@ -144,14 +152,14 @@ func _on_downbeat_reset_time_elapsed(_count):
 	measure_time_elapsed = 0
 	var new_indicator = outer_indicator_scene.instantiate()
 	new_indicator.position = CENTER
-	$BeatIndicators.add_child(new_indicator)
+	$OuterBeatIndicators.add_child(new_indicator)
 
 
 func _on_third_beat_spawn_next_indicator(_count):
 	var new_indicator = inner_indicator_scene.instantiate()
 	new_indicator.position = CENTER
 	new_indicator.scale = Vector2.ZERO
-	$BeatIndicators.add_child(new_indicator)
+	$InnerBeatIndicators.add_child(new_indicator)
 	
 func _on_measure_start_spawn_beat_markers(_count):
 	# Shift to 1-indexing (RhythmNotifier uses 0-indexing)

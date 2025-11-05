@@ -103,7 +103,9 @@ metadata/_custom_type_script = "uid://dos3qhffr4v0a"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_cm0pq")
 
-[node name="BeatIndicators" type="Node" parent="."]
+[node name="InnerBeatIndicators" type="Node" parent="."]
+
+[node name="OuterBeatIndicators" type="Node" parent="."]
 
 [node name="PlayerController" parent="." instance=ExtResource("4_cm0pq")]
 
