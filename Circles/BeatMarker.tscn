@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dtcl6kojvbo5x"]
 
-[ext_resource type="Script" uid="uid://cl5c3dmc44662" path="res://beat_marker.gd" id="1_27dc3"]
+[ext_resource type="Script" uid="uid://cl5c3dmc44662" path="res://Circles/beat_marker.gd" id="1_27dc3"]
 
 [sub_resource type="Gradient" id="Gradient_y7sgm"]
 interpolation_mode = 1

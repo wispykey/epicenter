@@ -1,6 +1,6 @@
 [gd_resource type="GradientTexture2D" load_steps=2 format=3 uid="uid://d3le132p3teni"]
 
-[ext_resource type="Gradient" uid="uid://bq2b7kifxywct" path="res://ring_gradient.tres" id="1_urscu"]
+[ext_resource type="Gradient" uid="uid://bq2b7kifxywct" path="res://Circles/ring_gradient.tres" id="1_urscu"]
 
 [resource]
 gradient = ExtResource("1_urscu")

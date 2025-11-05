@@ -13,11 +13,11 @@ config_version=5
 config/name="Epicenter"
 run/main_scene="uid://bc22jsfx801uu"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://Art/icon.svg"
 
 [autoload]
 
-Conductor="*res://Conductor.tscn"
+Conductor="*res://Conductor/Conductor.tscn"
 
 [display]
 

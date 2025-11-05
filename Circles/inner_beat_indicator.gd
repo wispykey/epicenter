@@ -9,5 +9,5 @@ func _ready() -> void:
 	pass
 	
 func _process(_delta: float) -> void:
-	if scale.x > end_scale.x: #lmao
+	if scale.x >= end_scale.x: #lmao
 		queue_free()

@@ -1,12 +1,13 @@
 extends Node
 
-var outer_indicator_scene = preload("res://OuterBeatIndicator.tscn")
-var inner_indicator_scene = preload("res://InnerBeatIndicator.tscn")
-var beat_marker_scene = preload("res://BeatMarker.tscn")
+var outer_indicator_scene = preload("res://Circles/OuterBeatIndicator.tscn")
+var inner_indicator_scene = preload("res://Circles/InnerBeatIndicator.tscn")
+var beat_marker_scene = preload("res://Circles/BeatMarker.tscn")
 
 # HARD-CODED 4 in time signature numerator. We will not support other meters for GameOff.
 const TIME_SIGNATURE_NUMERATOR: int = 4
-const COUNTDOWN_OFFSET: int = 1 # in measures
+const COUNTDOWN_OFFSET: int = 1 # in measures'
+const INNER_RING_EASE: float = 0.5
 
 var measure_time_elapsed: float = 0
 
@@ -58,6 +59,7 @@ var current_beatmap: BeatMap
 var left_side_spawn_timings = {}
 var right_side_spawn_timings = {}
 
+
 func _ready() -> void:
 	Conductor.beats(0.0625).connect(_on_sixteenth_notes_update_time_elapsed)
 	Conductor.beats(4).connect(_on_downbeat_reset_time_elapsed)
@@ -66,7 +68,7 @@ func _ready() -> void:
 	
 	init_ring_pulses()
 	
-	current_beatmap = load("res://all_downbeats_beatmap.tres")
+	current_beatmap = load("res://Beatmaps/all_downbeats_beatmap.tres")
 	compute_spawn_timings()
 	
 	Conductor.countdown(4)
@@ -100,6 +102,7 @@ func play_pulse_animation_tween(node: Node2D):
 	
 	tween.play()
 
+
 func _on_first_beat_pulse_ring1(_count):
 	play_pulse_animation_tween($Ring1)
 	
@@ -127,7 +130,7 @@ func update_indicator_sizes():
 	for indicator in $InnerBeatIndicators.get_children():
 		var t = indicator.measure_time_elapsed / (measure_length * indicator.extra_duration_ratio)
 		var lerp_output = lerp(0.0, indicator.end_scale.x, t)
-		var eased_lerp_output = ease(lerp_output, 0.8)
+		var eased_lerp_output = ease(lerp_output, INNER_RING_EASE)
 		var new_scale = indicator.start_scale.x + eased_lerp_output
 		indicator.scale = Vector2(new_scale, new_scale)
 		
@@ -136,6 +139,7 @@ func update_indicator_sizes():
 		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
 		var new_scale = lerp_progress
 		marker.indicator.scale = Vector2(new_scale, new_scale)
+
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
 	var step = (Conductor.beat_length / 16.0)
@@ -161,10 +165,13 @@ func _on_third_beat_spawn_next_indicator(_count):
 	new_indicator.scale = Vector2.ZERO
 	$InnerBeatIndicators.add_child(new_indicator)
 	
+	
 func _on_measure_start_spawn_beat_markers(_count):
 	# Shift to 1-indexing (RhythmNotifier uses 0-indexing)
 	var current_measure = floori((Conductor.current_beat) / 4.0) + 1
 
+	# Looping allows a single measure to be defined for the whole song
+	# TODO: Allow defining multiple loops, to match different sections of a song (?)
 	if current_beatmap.is_looping:
 		for marker_timing in right_side_spawn_timings.get(1):
 			var marker = beat_marker_scene.instantiate()

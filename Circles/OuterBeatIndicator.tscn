@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbofp408ftg6l"]
+
+[ext_resource type="Texture2D" uid="uid://d3le132p3teni" path="res://Circles/ring.tres" id="1_4dvfj"]
+[ext_resource type="Script" uid="uid://drua41awry7d7" path="res://Circles/outer_beat_indicator.gd" id="2_xf3wd"]
+
+[node name="OuterBeatIndicator" type="Sprite2D"]
+texture = ExtResource("1_4dvfj")
+script = ExtResource("2_xf3wd")

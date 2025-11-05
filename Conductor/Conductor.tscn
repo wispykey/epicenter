@@ -1,17 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://b3ypxnb2xl6fo"]
 
-[ext_resource type="Script" uid="uid://lf5r68pskstx" path="res://rhythm_notifier_extended.gd" id="1_ii0ch"]
-[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://2024-01-17-#RadiateNeon_Cutscene.mp3" id="2_rfu70"]
+[ext_resource type="Script" uid="uid://lf5r68pskstx" path="res://Conductor/rhythm_notifier_extended.gd" id="1_jfeuu"]
+[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://Music/2024-01-17-#RadiateNeon_Cutscene.mp3" id="2_nwmpc"]
 
 [node name="Conductor" type="Node" node_paths=PackedStringArray("audio_stream_player")]
-script = ExtResource("1_ii0ch")
+script = ExtResource("1_jfeuu")
 bpm = 120.0
 beat_length = 0.5
 audio_stream_player = NodePath("AudioStreamPlayer")
 metadata/_custom_type_script = "uid://dos3qhffr4v0a"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_rfu70")
+stream = ExtResource("2_nwmpc")
 
 [node name="CountdownTimer" type="Timer" parent="."]
 one_shot = true

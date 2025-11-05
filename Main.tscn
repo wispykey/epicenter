@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://biukqlkr8fqtn" path="res://main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dos3qhffr4v0a" path="res://addons/rhythm_notifier/rhythm_notifier.gd" id="2_cm0pq"]
-[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://2024-01-17-#RadiateNeon_Cutscene.mp3" id="3_cm0pq"]
-[ext_resource type="PackedScene" uid="uid://brt5ys872xpig" path="res://PlayerController.tscn" id="4_cm0pq"]
+[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://Music/2024-01-17-#RadiateNeon_Cutscene.mp3" id="3_cm0pq"]
+[ext_resource type="PackedScene" uid="uid://brt5ys872xpig" path="res://Player/PlayerController.tscn" id="4_cm0pq"]
 
 [sub_resource type="Gradient" id="Gradient_cm0pq"]
 interpolation_mode = 1
