@@ -140,7 +140,8 @@ func update_indicators():
 		var new_scale = lerp_progress
 		var new_opacity = ease(t, 0.4)
 		marker.indicator.scale = Vector2(new_scale, new_scale)
-		marker.indicator.modulate.a = new_opacity
+		marker.indicator.self_modulate.a = new_opacity
+		marker.self_modulate.a = new_opacity * 2
 
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
