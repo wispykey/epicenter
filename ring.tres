@@ -1,0 +1,11 @@
+[gd_resource type="GradientTexture2D" load_steps=2 format=3 uid="uid://d3le132p3teni"]
+
+[ext_resource type="Gradient" uid="uid://bq2b7kifxywct" path="res://ring_gradient.tres" id="1_urscu"]
+
+[resource]
+gradient = ExtResource("1_urscu")
+width = 297
+height = 297
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)

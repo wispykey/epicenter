@@ -1,0 +1,110 @@
+[gd_scene load_steps=15 format=3 uid="uid://bc22jsfx801uu"]
+
+[ext_resource type="Script" uid="uid://biukqlkr8fqtn" path="res://main.gd" id="1_r0du0"]
+[ext_resource type="Script" uid="uid://dos3qhffr4v0a" path="res://addons/rhythm_notifier/rhythm_notifier.gd" id="2_cm0pq"]
+[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://2024-01-17-#RadiateNeon_Cutscene.mp3" id="3_cm0pq"]
+[ext_resource type="PackedScene" uid="uid://brt5ys872xpig" path="res://PlayerController.tscn" id="4_cm0pq"]
+
+[sub_resource type="Gradient" id="Gradient_cm0pq"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.93333334, 0.98, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fos0i"]
+gradient = SubResource("Gradient_cm0pq")
+width = 2000
+height = 2000
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_rxg2q"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.98, 1)
+colors = PackedColorArray(0.085, 0.17, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_glv2v"]
+gradient = SubResource("Gradient_rxg2q")
+width = 720
+height = 720
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_glv2v"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.98, 1)
+colors = PackedColorArray(0.16, 0.32, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_uu6xs"]
+gradient = SubResource("Gradient_glv2v")
+width = 579
+height = 579
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_r0du0"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.96, 1)
+colors = PackedColorArray(0.27, 0.54, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cm0pq"]
+gradient = SubResource("Gradient_r0du0")
+width = 438
+height = 438
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_fos0i"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.96, 1)
+colors = PackedColorArray(0.445, 0.89, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3dxm6"]
+gradient = SubResource("Gradient_fos0i")
+width = 297
+height = 297
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="Main" type="Node"]
+script = ExtResource("1_r0du0")
+
+[node name="Ring0" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_fos0i")
+
+[node name="Ring4" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_glv2v")
+
+[node name="Ring3" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_uu6xs")
+
+[node name="Ring2" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_cm0pq")
+
+[node name="Ring1" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_3dxm6")
+
+[node name="RhythmNotifier" type="Node" parent="." node_paths=PackedStringArray("audio_stream_player")]
+script = ExtResource("2_cm0pq")
+bpm = 120.0
+beat_length = 0.5
+audio_stream_player = NodePath("../AudioStreamPlayer")
+metadata/_custom_type_script = "uid://dos3qhffr4v0a"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_cm0pq")
+
+[node name="BeatIndicators" type="Node" parent="."]
+
+[node name="PlayerController" parent="." instance=ExtResource("4_cm0pq")]
+
+[node name="BeatMarkers" type="Node" parent="."]

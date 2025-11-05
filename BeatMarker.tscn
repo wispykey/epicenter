@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dtcl6kojvbo5x"]
+
+[ext_resource type="Script" uid="uid://cl5c3dmc44662" path="res://beat_marker.gd" id="1_27dc3"]
+
+[sub_resource type="Gradient" id="Gradient_y7sgm"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.9, 0.98)
+colors = PackedColorArray(0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_27dc3"]
+gradient = SubResource("Gradient_y7sgm")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_27dc3"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.88, 1)
+colors = PackedColorArray(0, 0, 1, 0, 0, 0, 0.33333334, 1, 0, 0, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_w2220"]
+gradient = SubResource("Gradient_27dc3")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="BeatMarker" type="Sprite2D"]
+texture = SubResource("GradientTexture2D_27dc3")
+script = ExtResource("1_27dc3")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="TimingRing" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_w2220")

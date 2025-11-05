@@ -1,0 +1,171 @@
+extends Node
+
+var outer_indicator_scene = preload("res://OuterBeatIndicator.tscn")
+var inner_indicator_scene = preload("res://InnerBeatIndicator.tscn")
+var beat_marker_scene = preload("res://BeatMarker.tscn")
+
+# HARD-CODED 4 in time signature numerator. We will not support other meters for GameOff.
+const TIME_SIGNATURE_NUMERATOR: int = 4
+const COUNTDOWN_OFFSET: int = 1 # in measures
+
+var measure_time_elapsed: float = 0
+
+const CENTER = Vector2(640, 360)
+const RING_INTER_DISTANCE = 141
+const FIRST_RING_DIAMETER = 297
+const FIRST_RING_X = FIRST_RING_DIAMETER / 2.0
+
+const LEFT_MARKER_QUARTER_NOTE_POSITIONS = [
+	Vector2(CENTER.x + FIRST_RING_X, CENTER.y),
+	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0, CENTER.y),
+	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0 * 2.0, CENTER.y),
+	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0 * 3.0, CENTER.y),
+]
+
+const RIGHT_MARKER_QUARTER_NOTE_POSITIONS = [
+	Vector2(CENTER.x - FIRST_RING_X, CENTER.y),
+	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0, CENTER.y),
+	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0 * 2.0, CENTER.y),
+	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0 * 3.0, CENTER.y),
+]
+
+const left_beatmap = {
+	1: true,
+	2: true,
+	3: true,
+	4: true
+}
+
+const right_beatmap = {
+	1: true,
+	2: true,
+	3: true,
+	4: true
+}
+
+const left_beatmap_measures = {
+	1: [1],
+	2: [2],
+	3: [3],
+	4: [4],
+	5: [1,2],
+	6: [3,4],
+	7: [1,4],
+	8: [2,3]
+}
+
+var current_beatmap: BeatMap
+var left_side_spawn_timings = {}
+var right_side_spawn_timings = {}
+
+func _ready() -> void:
+	Conductor.beats(0.125).connect(_on_sixteenth_notes_update_time_elapsed)
+	Conductor.beats(4).connect(_on_downbeat_reset_time_elapsed)
+	Conductor.beats(4).connect(_on_third_beat_spawn_next_indicator)
+	Conductor.beats(4).connect(_on_measure_start_spawn_beat_markers)
+	
+	init_ring_pulses()
+	
+	current_beatmap = load("res://beatmap.tres")
+	compute_spawn_timings()
+	
+	Conductor.countdown(4)
+	
+	
+func _process(_delta: float) -> void:
+	update_indicator_sizes()
+
+
+func init_ring_pulses():
+	Conductor.beats(4, true, 0).connect(_on_first_beat_pulse_ring1)
+	Conductor.beats(4, true, 1).connect(_on_second_beat_pulse_ring2)
+	Conductor.beats(4, true, 2).connect(_on_third_beat_pulse_ring3)
+	Conductor.beats(4, true, 3).connect(_on_fourth_beat_pulse_ring4)
+
+
+func compute_spawn_timings():
+	
+	for timing in current_beatmap.left_side_timings:
+		left_side_spawn_timings[timing] = current_beatmap.left_side_timings[timing]
+		
+	for timing in current_beatmap.right_side_timings:
+		right_side_spawn_timings[timing] = current_beatmap.right_side_timings[timing]
+
+
+func play_pulse_animation_tween(node: Node2D):
+	var tween = create_tween()
+	
+	tween.tween_property(node, "scale", Vector2(1.15, 1.15), 0.15)
+	tween.chain().tween_property(node, "scale", Vector2.ONE, 0.1)
+	
+	tween.play()
+
+func _on_first_beat_pulse_ring1(_count):
+	play_pulse_animation_tween($Ring1)
+	pass
+	
+func _on_second_beat_pulse_ring2(_count):
+	play_pulse_animation_tween($Ring2)
+	pass
+	
+func _on_third_beat_pulse_ring3(_count):
+	play_pulse_animation_tween($Ring3)
+	pass
+	
+func _on_fourth_beat_pulse_ring4(_count):
+	play_pulse_animation_tween($Ring4)
+	pass
+
+func update_indicator_sizes():
+	var measure_length = Conductor.beat_length * TIME_SIGNATURE_NUMERATOR
+	
+	for indicator in $BeatIndicators.get_children():
+		var t = indicator.measure_time_elapsed / (measure_length * indicator.extra_duration_ratio)
+		var new_scale = indicator.start_scale.x + lerp(0.0, indicator.end_scale.x, t)
+		indicator.scale = Vector2(new_scale, new_scale)
+		
+	for marker in $BeatMarkers.get_children():
+		var t = marker.measure_time_elapsed / (measure_length * marker.extra_duration_ratio)
+		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
+		print(lerp_progress)
+		var new_scale = lerp_progress
+		marker.indicator.scale = Vector2(new_scale, new_scale)
+
+func _on_sixteenth_notes_update_time_elapsed(_count):
+	var step = (Conductor.beat_length / 8.0)
+	for indicator in $BeatIndicators.get_children():
+		indicator.measure_time_elapsed += step
+	for indicator in $BeatMarkers.get_children():
+		indicator.measure_time_elapsed += step
+	measure_time_elapsed += step
+	
+	
+func _on_downbeat_reset_time_elapsed(_count):
+	measure_time_elapsed = 0
+	var new_indicator = outer_indicator_scene.instantiate()
+	new_indicator.position = CENTER
+	$BeatIndicators.add_child(new_indicator)
+
+
+func _on_third_beat_spawn_next_indicator(_count):
+	var new_indicator = inner_indicator_scene.instantiate()
+	new_indicator.position = CENTER
+	new_indicator.scale = Vector2.ZERO
+	$BeatIndicators.add_child(new_indicator)
+	
+func _on_measure_start_spawn_beat_markers(_count):
+	# Shift to 1-indexing (RhythmNotifier uses 0-indexing	
+	var current_measure = floori((Conductor.current_beat) / 4.0) + 1
+	
+	print(Conductor.current_beat)
+
+	if current_measure in left_side_spawn_timings:
+		for marker_timing in left_side_spawn_timings[current_measure]:
+			var marker = beat_marker_scene.instantiate()
+			marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+			$BeatMarkers.add_child(marker)
+	if current_measure in right_side_spawn_timings:
+		for marker_timing in right_side_spawn_timings[current_measure]:
+			var marker = beat_marker_scene.instantiate()
+			marker.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+			$BeatMarkers.add_child(marker)

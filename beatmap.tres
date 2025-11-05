@@ -1,0 +1,6 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://crkxwn1dgrn35"]
+
+[ext_resource type="Script" uid="uid://ebwt0iyw76lk" path="res://beatmap.gd" id="1_a3w70"]
+
+[resource]
+script = ExtResource("1_a3w70")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://0v7xro5ra2pq"]
+
+[ext_resource type="Texture2D" uid="uid://d3le132p3teni" path="res://ring.tres" id="1_vhmpj"]
+[ext_resource type="Script" uid="uid://ctsr5r122rqql" path="res://inner_beat_indicator.gd" id="2_vhmpj"]
+
+[node name="InnerBeatIndicator" type="Sprite2D"]
+texture = ExtResource("1_vhmpj")
+script = ExtResource("2_vhmpj")
