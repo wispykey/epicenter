@@ -76,6 +76,7 @@ func _ready() -> void:
 	
 func _process(_delta: float) -> void:
 	update_indicators()
+	update_debug_info()
 
 
 func init_ring_pulses():
@@ -83,6 +84,11 @@ func init_ring_pulses():
 	Conductor.beats(4, true, 1).connect(_on_second_beat_pulse_ring2)
 	Conductor.beats(4, true, 2).connect(_on_third_beat_pulse_ring3)
 	Conductor.beats(4, true, 3).connect(_on_fourth_beat_pulse_ring4)
+
+
+func update_debug_info():
+	$CountdownLabel.text = "%.3f" % Conductor.countdown_duration
+	$PositionLabel.text = "%.3f" % Conductor._position
 
 
 func compute_spawn_timings():
