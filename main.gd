@@ -75,7 +75,7 @@ func _ready() -> void:
 	
 	
 func _process(_delta: float) -> void:
-	update_indicator_sizes()
+	update_indicators()
 
 
 func init_ring_pulses():
@@ -119,7 +119,7 @@ func _on_fourth_beat_pulse_ring4(_count):
 	play_pulse_animation_tween($Ring4)
 
 
-func update_indicator_sizes():
+func update_indicators():
 	var measure_length = Conductor.beat_length * TIME_SIGNATURE_NUMERATOR
 	
 	for indicator in $OuterBeatIndicators.get_children():
@@ -138,7 +138,9 @@ func update_indicator_sizes():
 		var t = marker.measure_time_elapsed / (measure_length * marker.extra_duration_ratio)
 		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
 		var new_scale = lerp_progress
+		var new_opacity = ease(t, 0.4)
 		marker.indicator.scale = Vector2(new_scale, new_scale)
+		marker.indicator.modulate.a = new_opacity
 
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
