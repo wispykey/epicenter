@@ -59,14 +59,14 @@ var left_side_spawn_timings = {}
 var right_side_spawn_timings = {}
 
 func _ready() -> void:
-	Conductor.beats(0.125).connect(_on_sixteenth_notes_update_time_elapsed)
+	Conductor.beats(0.0625).connect(_on_sixteenth_notes_update_time_elapsed)
 	Conductor.beats(4).connect(_on_downbeat_reset_time_elapsed)
 	Conductor.beats(4).connect(_on_third_beat_spawn_next_indicator)
 	Conductor.beats(4).connect(_on_measure_start_spawn_beat_markers)
 	
 	init_ring_pulses()
 	
-	current_beatmap = load("res://beatmap.tres")
+	current_beatmap = load("res://all_downbeats_beatmap.tres")
 	compute_spawn_timings()
 	
 	Conductor.countdown(4)
@@ -132,7 +132,7 @@ func update_indicator_sizes():
 		marker.indicator.scale = Vector2(new_scale, new_scale)
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
-	var step = (Conductor.beat_length / 8.0)
+	var step = (Conductor.beat_length / 16.0)
 	for indicator in $BeatIndicators.get_children():
 		indicator.measure_time_elapsed += step
 	for indicator in $BeatMarkers.get_children():
@@ -154,18 +154,26 @@ func _on_third_beat_spawn_next_indicator(_count):
 	$BeatIndicators.add_child(new_indicator)
 	
 func _on_measure_start_spawn_beat_markers(_count):
-	# Shift to 1-indexing (RhythmNotifier uses 0-indexing	
+	# Shift to 1-indexing (RhythmNotifier uses 0-indexing)
 	var current_measure = floori((Conductor.current_beat) / 4.0) + 1
-	
-	print(Conductor.current_beat)
 
-	if current_measure in left_side_spawn_timings:
-		for marker_timing in left_side_spawn_timings[current_measure]:
-			var marker = beat_marker_scene.instantiate()
-			marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
-			$BeatMarkers.add_child(marker)
-	if current_measure in right_side_spawn_timings:
-		for marker_timing in right_side_spawn_timings[current_measure]:
+	if current_beatmap.is_looping:
+		for marker_timing in right_side_spawn_timings.get(1):
 			var marker = beat_marker_scene.instantiate()
 			marker.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
 			$BeatMarkers.add_child(marker)
+		for marker_timing in left_side_spawn_timings.get(1):
+			var marker = beat_marker_scene.instantiate()
+			marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+			$BeatMarkers.add_child(marker)
+	else:	
+		if current_measure in right_side_spawn_timings:
+			for marker_timing in right_side_spawn_timings[current_measure]:
+				var marker = beat_marker_scene.instantiate()
+				marker.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+				$BeatMarkers.add_child(marker)
+		if current_measure in left_side_spawn_timings:
+			for marker_timing in left_side_spawn_timings[current_measure]:
+				var marker = beat_marker_scene.instantiate()
+				marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+				$BeatMarkers.add_child(marker)

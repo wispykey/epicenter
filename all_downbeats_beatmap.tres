@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BeatMap" load_steps=3 format=3 uid="uid://crkxwn1dgrn35"]
+
+[ext_resource type="Script" uid="uid://ebwt0iyw76lk" path="res://beatmap.gd" id="1_fqkim"]
+[ext_resource type="AudioStream" uid="uid://rk0c0lkr3oco" path="res://2024-01-17-#RadiateNeon_Cutscene.mp3" id="2_ejjs4"]
+
+[resource]
+script = ExtResource("1_fqkim")
+song_stream = ExtResource("2_ejjs4")
+right_side_timings = {
+1: PackedInt32Array(1)
+}
+left_side_timings = {
+1: PackedInt32Array(1)
+}
