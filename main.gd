@@ -40,83 +40,61 @@ const LEFT_MARKER_QUARTER_NOTE_POSITIONS = [
 	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0 * 3.0, CENTER.y),
 ]
 
-const left_beatmap = {
-	1: true,
-	2: true,
-	3: true,
-	4: true
-}
-
-const right_beatmap = {
-	1: true,
-	2: true,
-	3: true,
-	4: true
-}
-
-const left_beatmap_measures = {
-	1: [1],
-	2: [2],
-	3: [3],
-	4: [4],
-	5: [1,2],
-	6: [3,4],
-	7: [1,4],
-	8: [2,3]
-}
-
 var current_beatmap: BeatMap
 var left_side_spawn_timings = {}
 var right_side_spawn_timings = {}
 
 
+@onready var input_to_collision_area_dict = {
+	"hit_ring1_right": $CollisionZones/Ring1Right,
+	"hit_ring2_right": $CollisionZones/Ring2Right,
+	"hit_ring3_right": $CollisionZones/Ring3Right,
+	"hit_ring4_right": $CollisionZones/Ring4Right,
+	"hit_ring1_left": $CollisionZones/Ring1Left,
+	"hit_ring2_left": $CollisionZones/Ring2Left,
+	"hit_ring3_left": $CollisionZones/Ring3Left,
+	"hit_ring4_left": $CollisionZones/Ring4Left,
+}
+
+
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("hit_ring1_right"):
-		# Check if there is a beat marker currently there
-		# If so, remove the least recently added one (there may be multiple)
-			# And, compute score based on input timing relative to the beat
-		# Otherwise, play some sort of 'oops' noise and VFX
 
-		var marker_areas: Array[Area2D] = $CollisionZones/Ring1Right.get_overlapping_areas()
+	for input in input_to_collision_area_dict:
+		if event.is_action_pressed(input):
+			var collision_area = input_to_collision_area_dict[input]
+			var marker_areas: Array[Area2D] = collision_area.get_overlapping_areas()
 
-		# Commented-out code to find the longest-living marker to remove first, if needed
+			# Commented-out code to find the longest-living marker to remove first, if needed
 
-		# var reduce_func = func compare_lifetime(accum, area):
-		# 	if area.owner.measure_time_elapsed > accum.owner.measure_time_elapsed:
-		# 		return area
-		# 	else:
-		# 		return accum
+			# var reduce_func = func compare_lifetime(accum, area):
+			# 	if area.owner.measure_time_elapsed > accum.owner.measure_time_elapsed:
+			# 		return area
+			# 	else:
+			# 		return accum
 
-		var radar_blip = blip_vfx_scene.instantiate()
-		radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+			var radar_blip = blip_vfx_scene.instantiate()
 
-		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
-			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
-			# marker_area_to_remove.owner.queue_free()
-			marker_areas[0].owner.queue_free()
-		else:
-			radar_blip.modulate = BLIP_VFX_MISS_COLOR
+			# HARD-CODED string parsing of input names...
+			var which_ring = input.split("_")[1]
+			if not which_ring: return
+			# Shift from 1-index to 0-index
+			var ring_index = int(which_ring[-1]) - 1
 
-
-		add_child(radar_blip)
-
-		
-	if event.is_action_pressed("hit_ring1_left"):
-		var marker_areas: Array[Area2D] = $CollisionZones/Ring1Left.get_overlapping_areas()
-
-		var radar_blip = blip_vfx_scene.instantiate()
-		radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
-
-		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
-			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
-			# marker_area_to_remove.owner.queue_free()
-			marker_areas[0].owner.queue_free()
-		else:
-			radar_blip.modulate = BLIP_VFX_MISS_COLOR
+			if "left" in input:
+				radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] + BLIP_VFX_OFFSET
+			else:
+				radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] + BLIP_VFX_OFFSET
 
 
-		add_child(radar_blip)
-	
+
+			if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
+				# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
+				# marker_area_to_remove.owner.queue_free()
+				marker_areas[0].owner.queue_free()
+			else:
+				radar_blip.modulate = BLIP_VFX_MISS_COLOR
+
+			add_child(radar_blip)
 		
 
 func _ready() -> void:

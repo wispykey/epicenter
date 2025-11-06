@@ -159,10 +159,58 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring1Right"]
 shape = SubResource("CircleShape2D_cm0pq")
 
+[node name="Ring2Right" type="Area2D" parent="CollisionZones"]
+position = Vector2(859, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring2Right"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring3Right" type="Area2D" parent="CollisionZones"]
+position = Vector2(929.5, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring3Right"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring4Right" type="Area2D" parent="CollisionZones"]
+position = Vector2(1000, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring4Right"]
+shape = SubResource("CircleShape2D_cm0pq")
+
 [node name="Ring1Left" type="Area2D" parent="CollisionZones"]
 position = Vector2(491.5, 360)
 collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring1Left"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring2Left" type="Area2D" parent="CollisionZones"]
+position = Vector2(421, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring2Left"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring3Left" type="Area2D" parent="CollisionZones"]
+position = Vector2(350.5, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring3Left"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring4Left" type="Area2D" parent="CollisionZones"]
+position = Vector2(280, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring4Left"]
 shape = SubResource("CircleShape2D_cm0pq")
