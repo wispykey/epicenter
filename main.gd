@@ -3,6 +3,7 @@ extends Node
 var outer_indicator_scene = preload("res://Circles/OuterBeatIndicator.tscn")
 var inner_indicator_scene = preload("res://Circles/InnerBeatIndicator.tscn")
 var beat_marker_scene = preload("res://Circles/BeatMarker.tscn")
+var blip_vfx_scene = preload("res://Shaders/BlipVFX.tscn")
 
 # HARD-CODED 4 in time signature numerator. We will not support other meters for GameOff.
 const TIME_SIGNATURE_NUMERATOR: int = 4
@@ -15,6 +16,8 @@ const CENTER = Vector2(640, 360)
 const RING_INTER_DISTANCE = 141
 const FIRST_RING_DIAMETER = 297
 const FIRST_RING_X = FIRST_RING_DIAMETER / 2.0
+
+const BLIP_VFX_OFFSET = Vector2(-100, -100)
 
 const LEFT_MARKER_QUARTER_NOTE_POSITIONS = [
 	Vector2(CENTER.x + FIRST_RING_X, CENTER.y),
@@ -59,6 +62,21 @@ var current_beatmap: BeatMap
 var left_side_spawn_timings = {}
 var right_side_spawn_timings = {}
 
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("hit_ring1_right"):
+		print("HIT Ring1 R")
+		var radar_blip = blip_vfx_scene.instantiate()
+		radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+		add_child(radar_blip)
+	if event.is_action_pressed("hit_ring1_left"):
+		print("HIT Ring1 L")
+		var radar_blip = blip_vfx_scene.instantiate()
+		radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+		add_child(radar_blip)
+
+	
+		
 
 func _ready() -> void:
 	Conductor.beats(0.0625).connect(_on_sixteenth_notes_update_time_elapsed)
@@ -152,7 +170,7 @@ func update_indicators():
 		var new_opacity = ease(t, 0.4)
 		marker.indicator.scale = Vector2(new_scale, new_scale)
 		marker.indicator.self_modulate.a = new_opacity
-		marker.self_modulate.a = new_opacity * 2
+		marker.self_modulate.a = new_opacity * 1.4
 
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
