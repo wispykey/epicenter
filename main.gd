@@ -76,6 +76,8 @@ func _ready() -> void:
 	
 func _process(_delta: float) -> void:
 	update_indicators()
+
+func _physics_process(_delta: float) -> void:
 	update_debug_info()
 
 
@@ -87,8 +89,11 @@ func init_ring_pulses():
 
 
 func update_debug_info():
-	$CountdownLabel.text = "%.3f" % Conductor.countdown_duration
-	$PositionLabel.text = "%.3f" % Conductor._position
+	$PositionLabel.text = "_position: %.3f" % Conductor._position
+	$CountdownLabel.text = "playback: %.3f" % Conductor.audio_stream_player.get_playback_position()
+	$TimeSinceLastMixLabel.text = "last_mix: %.3f" % AudioServer.get_time_since_last_mix()
+	$CachedLatencyLabel.text = "cached: %.3f" % Conductor._cached_output_latency
+
 
 
 func compute_spawn_timings():

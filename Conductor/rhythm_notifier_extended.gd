@@ -1,6 +1,8 @@
 @tool
 extends RhythmNotifier
 
+func play():
+	$AudioStreamPlayer.play()
 
 var countdown_beat: int = 0
 var countdown_duration: float = 0.0

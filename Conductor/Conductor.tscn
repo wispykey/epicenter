@@ -15,15 +15,3 @@ stream = ExtResource("2_nwmpc")
 
 [node name="CountdownTimer" type="Timer" parent="."]
 one_shot = true
-
-[node name="CountdownLabel" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-theme_override_font_sizes/font_size = 100
-
-[node name="PositionLabel" type="Label" parent="."]
-offset_left = 3.0
-offset_top = 217.0
-offset_right = 43.0
-offset_bottom = 354.0
-theme_override_font_sizes/font_size = 100
