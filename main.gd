@@ -10,11 +10,12 @@ const TIME_SIGNATURE_NUMERATOR: int = 4
 const COUNTDOWN_OFFSET: int = 1 # in measures'
 const INNER_RING_EASE: float = 0.5
 
-const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 1.0
+const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 0.5
 
 # Increase above 1.0 to have correct timing align with a larger indicator ring state
 # Maybe should be a constant instead of multiplier?
 const BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER: float = 1.05
+const BLIP_VFX_MISS_COLOR = Color(1.0, 0.2, 0.2, 1.0)
 
 var measure_time_elapsed: float = 0
 
@@ -25,14 +26,14 @@ const FIRST_RING_X = FIRST_RING_DIAMETER / 2.0
 
 const BLIP_VFX_OFFSET = Vector2(-100, -100)
 
-const LEFT_MARKER_QUARTER_NOTE_POSITIONS = [
+const RIGHT_MARKER_QUARTER_NOTE_POSITIONS = [
 	Vector2(CENTER.x + FIRST_RING_X, CENTER.y),
 	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0, CENTER.y),
 	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0 * 2.0, CENTER.y),
 	Vector2(CENTER.x + FIRST_RING_X + RING_INTER_DISTANCE/2.0 * 3.0, CENTER.y),
 ]
 
-const RIGHT_MARKER_QUARTER_NOTE_POSITIONS = [
+const LEFT_MARKER_QUARTER_NOTE_POSITIONS = [
 	Vector2(CENTER.x - FIRST_RING_X, CENTER.y),
 	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0, CENTER.y),
 	Vector2(CENTER.x - FIRST_RING_X - RING_INTER_DISTANCE/2.0 * 2.0, CENTER.y),
@@ -71,7 +72,6 @@ var right_side_spawn_timings = {}
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("hit_ring1_right"):
-		print("HIT Ring1 R")
 		# Check if there is a beat marker currently there
 		# If so, remove the least recently added one (there may be multiple)
 			# And, compute score based on input timing relative to the beat
@@ -87,32 +87,35 @@ func _input(event: InputEvent) -> void:
 		# 	else:
 		# 		return accum
 
+		var radar_blip = blip_vfx_scene.instantiate()
+		radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+
 		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
 			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
 			# marker_area_to_remove.owner.queue_free()
 			marker_areas[0].owner.queue_free()
+		else:
+			radar_blip.modulate = BLIP_VFX_MISS_COLOR
 
-			# VFX
-			# TODO: Conditional VFX depending on outcome/score
-			var radar_blip = blip_vfx_scene.instantiate()
-			radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
-			add_child(radar_blip)
 
+		add_child(radar_blip)
 
 		
 	if event.is_action_pressed("hit_ring1_left"):
-		print("HIT Ring1 L")
-		
 		var marker_areas: Array[Area2D] = $CollisionZones/Ring1Left.get_overlapping_areas()
+
+		var radar_blip = blip_vfx_scene.instantiate()
+		radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
 
 		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
 			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
 			# marker_area_to_remove.owner.queue_free()
 			marker_areas[0].owner.queue_free()
-			var radar_blip = blip_vfx_scene.instantiate()
-			radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
-			add_child(radar_blip)
+		else:
+			radar_blip.modulate = BLIP_VFX_MISS_COLOR
 
+
+		add_child(radar_blip)
 	
 		
 

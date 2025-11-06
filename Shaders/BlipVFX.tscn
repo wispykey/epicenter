@@ -12,10 +12,10 @@ shader_parameter/alpha_boost = 3.0000000298024
 shader_parameter/t = 0.0
 
 [node name="BlipVFX" type="ColorRect"]
+modulate = Color(0, 1, 0, 0.68235296)
 material = SubResource("ShaderMaterial_li7h7")
 offset_right = 200.0
 offset_bottom = 200.0
-color = Color(0, 0.95, 0.33250013, 0.6039216)
 script = ExtResource("2_li7h7")
 
 [node name="Timer" type="Timer" parent="."]
