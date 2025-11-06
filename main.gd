@@ -66,6 +66,11 @@ var right_side_spawn_timings = {}
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("hit_ring1_right"):
 		print("HIT Ring1 R")
+		# Check if there is a beat marker currently there
+		# If so, remove the least recently added one (there may be multiple)
+			# And, compute score based on input timing relative to the beat
+		# Otherwise, play some sort of 'oops' noise and VFX
+
 		var radar_blip = blip_vfx_scene.instantiate()
 		radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
 		add_child(radar_blip)
@@ -164,13 +169,13 @@ func update_indicators():
 		indicator.scale = Vector2(new_scale, new_scale)
 		
 	for marker in $BeatMarkers.get_children():
-		var t = marker.measure_time_elapsed / (measure_length * marker.extra_duration_ratio)
+		var t = marker.measure_time_elapsed / (measure_length)
 		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
 		var new_scale = lerp_progress
 		var new_opacity = ease(t, 0.4)
 		marker.indicator.scale = Vector2(new_scale, new_scale)
 		marker.indicator.self_modulate.a = new_opacity
-		marker.self_modulate.a = new_opacity * 1.4
+		# marker.self_modulate.a = new_opacity * 1.4
 
 
 func _on_sixteenth_notes_update_time_elapsed(_count):
@@ -213,6 +218,7 @@ func _on_measure_start_spawn_beat_markers(_count):
 			var marker = beat_marker_scene.instantiate()
 			marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
 			$BeatMarkers.add_child(marker)
+
 	else:	
 		if current_measure in right_side_spawn_timings:
 			for marker_timing in right_side_spawn_timings[current_measure]:
