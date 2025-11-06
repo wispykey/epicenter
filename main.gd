@@ -12,6 +12,10 @@ const INNER_RING_EASE: float = 0.5
 
 const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 1.0
 
+# Increase above 1.0 to have correct timing align with a larger indicator ring state
+# Maybe should be a constant instead of multiplier?
+const BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER: float = 1.05
+
 var measure_time_elapsed: float = 0
 
 const CENTER = Vector2(640, 360)
@@ -198,7 +202,8 @@ func update_indicators():
 		indicator.scale = Vector2(new_scale, new_scale)
 		
 	for marker in $BeatMarkers.get_children():
-		var t = marker.measure_time_elapsed / (measure_length)
+		var t = marker.measure_time_elapsed / (measure_length * BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER)
+		t = clamp(t, 0, 1)
 		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
 		var new_scale = lerp_progress
 		var new_opacity = ease(t, 0.4)
