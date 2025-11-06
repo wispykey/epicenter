@@ -207,11 +207,17 @@ func update_indicators():
 	for marker in $BeatMarkers.get_children():
 		var t = marker.measure_time_elapsed / (measure_length * BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER)
 		t = clamp(t, 0, 1)
-		var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, t)
-		var new_scale = lerp_progress
+
+		# Scale-based GradientTexture2D approach
+		# var lerp_progress = lerp(marker.start_scale.x, marker.end_scale.x, ease(t, 0.6))
+		# var new_scale = lerp_progress
+		# marker.indicator.scale = Vector2(new_scale, new_scale)
+
+		# Shader + shader parameter approach
+		marker.update_shader_parameters(t)
+
 		var new_opacity = ease(t, 0.4)
-		marker.indicator.scale = Vector2(new_scale, new_scale)
-		marker.indicator.self_modulate.a = new_opacity
+		# marker.indicator.self_modulate.a = new_opacity
 		marker.self_modulate.a = new_opacity * 1.4
 
 
