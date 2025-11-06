@@ -17,6 +17,7 @@ func _ready() -> void:
 	$Timer.wait_time = 2.0 * extra_duration_ratio
 	$Timer.timeout.connect(_on_timer_timeout)
 	$Timer.start()
+	indicator.material = indicator.material.duplicate()
 	
 	
 func _on_timer_timeout():

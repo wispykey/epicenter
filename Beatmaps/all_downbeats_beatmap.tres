@@ -7,8 +7,8 @@
 script = ExtResource("1_fqkim")
 song_stream = ExtResource("2_ejjs4")
 right_side_timings = {
-1: PackedInt32Array(1)
+1: PackedInt32Array(1, 2, 3, 4)
 }
 left_side_timings = {
-1: PackedInt32Array(1)
+1: PackedInt32Array(1, 2, 3, 4)
 }

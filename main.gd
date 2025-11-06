@@ -123,7 +123,7 @@ func _ready() -> void:
 	Conductor.beats(0.0625).connect(_on_sixteenth_notes_update_time_elapsed)
 	Conductor.beats(4).connect(_on_downbeat_reset_time_elapsed)
 	Conductor.beats(4).connect(_on_third_beat_spawn_next_indicator)
-	Conductor.beats(4).connect(_on_measure_start_spawn_beat_markers)
+	Conductor.beats(1).connect(_on_quarter_beat_spawn_beat_markers)
 	
 	init_ring_pulses()
 	
@@ -246,21 +246,33 @@ func _on_third_beat_spawn_next_indicator(_count):
 	$InnerBeatIndicators.add_child(new_indicator)
 	
 	
-func _on_measure_start_spawn_beat_markers(_count):
+func _on_quarter_beat_spawn_beat_markers(_count):
 	# Shift to 1-indexing (RhythmNotifier uses 0-indexing)
 	var current_measure = floori((Conductor.current_beat) / 4.0) + 1
+	# Also 0-indexed, 0-1-2-3 in 4/4
+	var current_beat_in_measure = Conductor.current_beat % 4
 
 	# Looping allows a single measure to be defined for the whole song
 	# TODO: Allow defining multiple loops, to match different sections of a song (?)
 	if current_beatmap.is_looping:
-		for marker_timing in right_side_spawn_timings.get(1):
-			var marker = beat_marker_scene.instantiate()
-			marker.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
-			$BeatMarkers.add_child(marker)
-		for marker_timing in left_side_spawn_timings.get(1):
-			var marker = beat_marker_scene.instantiate()
-			marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
-			$BeatMarkers.add_child(marker)
+		# Instead of looping, we want to attempt a lookup of current 0-indexed beat
+		# Lookup will always be successful, but there may or may not be contents
+		var marker_timing = right_side_spawn_timings.get(1)[current_beat_in_measure]
+		var marker = beat_marker_scene.instantiate()
+		marker.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+		$BeatMarkers.add_child(marker)
+
+		var left_marker_timing = left_side_spawn_timings.get(1)[current_beat_in_measure]
+		var left_marker = beat_marker_scene.instantiate()
+		left_marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[left_marker_timing - 1]
+		$BeatMarkers.add_child(left_marker)
+
+
+
+		# for marker_timing in left_side_spawn_timings.get(1):
+		# 	var marker = beat_marker_scene.instantiate()
+		# 	marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
+		# 	$BeatMarkers.add_child(marker)
 
 	else:	
 		if current_measure in right_side_spawn_timings:
