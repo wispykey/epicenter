@@ -15,7 +15,7 @@ const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 0.5
 # Increase above 1.0 to have correct timing align with a larger indicator ring state
 # Maybe should be a constant instead of multiplier?
 const BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER: float = 1.05
-const BLIP_VFX_MISS_COLOR = Color(1.0, 0.2, 0.2, 1.0)
+const BLIP_VFX_MISS_COLOR = Color(0.0, 1.0, 1.0, 1.0)
 
 var measure_time_elapsed: float = 0
 
