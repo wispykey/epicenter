@@ -2,7 +2,7 @@ extends Sprite2D
 
 @onready var indicator := $TimingRing
 
-var extra_duration_ratio = 1.2
+var extra_duration_ratio = 1.05
 var measure_time_elapsed = 0.0
 var start_scale = Vector2(6.0, 6.0)
 var end_scale = Vector2(0.8, 0.8)

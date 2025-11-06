@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bc22jsfx801uu"]
+[gd_scene load_steps=16 format=3 uid="uid://bc22jsfx801uu"]
 
 [ext_resource type="Script" uid="uid://biukqlkr8fqtn" path="res://main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dos3qhffr4v0a" path="res://addons/rhythm_notifier/rhythm_notifier.gd" id="2_cm0pq"]
@@ -69,6 +69,8 @@ height = 297
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cm0pq"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_r0du0")
@@ -146,3 +148,21 @@ offset_right = 42.0
 offset_bottom = 453.0
 theme_override_font_sizes/font_size = 30
 text = "0.0"
+
+[node name="CollisionZones" type="Node" parent="."]
+
+[node name="Ring1Right" type="Area2D" parent="CollisionZones"]
+position = Vector2(788.5, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring1Right"]
+shape = SubResource("CircleShape2D_cm0pq")
+
+[node name="Ring1Left" type="Area2D" parent="CollisionZones"]
+position = Vector2(491.5, 360)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionZones/Ring1Left"]
+shape = SubResource("CircleShape2D_cm0pq")

@@ -10,6 +10,8 @@ const TIME_SIGNATURE_NUMERATOR: int = 4
 const COUNTDOWN_OFFSET: int = 1 # in measures'
 const INNER_RING_EASE: float = 0.5
 
+const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 1.0
+
 var measure_time_elapsed: float = 0
 
 const CENTER = Vector2(640, 360)
@@ -71,14 +73,41 @@ func _input(event: InputEvent) -> void:
 			# And, compute score based on input timing relative to the beat
 		# Otherwise, play some sort of 'oops' noise and VFX
 
-		var radar_blip = blip_vfx_scene.instantiate()
-		radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
-		add_child(radar_blip)
+		var marker_areas: Array[Area2D] = $CollisionZones/Ring1Right.get_overlapping_areas()
+
+		# Commented-out code to find the longest-living marker to remove first, if needed
+
+		# var reduce_func = func compare_lifetime(accum, area):
+		# 	if area.owner.measure_time_elapsed > accum.owner.measure_time_elapsed:
+		# 		return area
+		# 	else:
+		# 		return accum
+
+		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
+			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
+			# marker_area_to_remove.owner.queue_free()
+			marker_areas[0].owner.queue_free()
+
+			# VFX
+			# TODO: Conditional VFX depending on outcome/score
+			var radar_blip = blip_vfx_scene.instantiate()
+			radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+			add_child(radar_blip)
+
+
+		
 	if event.is_action_pressed("hit_ring1_left"):
 		print("HIT Ring1 L")
-		var radar_blip = blip_vfx_scene.instantiate()
-		radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
-		add_child(radar_blip)
+		
+		var marker_areas: Array[Area2D] = $CollisionZones/Ring1Left.get_overlapping_areas()
+
+		if marker_areas.size() > 0 and marker_areas[0].owner.measure_time_elapsed > MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE:
+			# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
+			# marker_area_to_remove.owner.queue_free()
+			marker_areas[0].owner.queue_free()
+			var radar_blip = blip_vfx_scene.instantiate()
+			radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[0] + BLIP_VFX_OFFSET
+			add_child(radar_blip)
 
 	
 		
@@ -175,7 +204,7 @@ func update_indicators():
 		var new_opacity = ease(t, 0.4)
 		marker.indicator.scale = Vector2(new_scale, new_scale)
 		marker.indicator.self_modulate.a = new_opacity
-		# marker.self_modulate.a = new_opacity * 1.4
+		marker.self_modulate.a = new_opacity * 1.4
 
 
 func _on_sixteenth_notes_update_time_elapsed(_count):

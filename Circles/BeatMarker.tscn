@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtcl6kojvbo5x"]
+[gd_scene load_steps=7 format=3 uid="uid://dtcl6kojvbo5x"]
 
 [ext_resource type="Script" uid="uid://cl5c3dmc44662" path="res://Circles/beat_marker.gd" id="1_27dc3"]
 
@@ -28,6 +28,8 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ig0yl"]
+
 [node name="BeatMarker" type="Sprite2D"]
 texture = SubResource("GradientTexture2D_27dc3")
 script = ExtResource("1_27dc3")
@@ -38,3 +40,10 @@ one_shot = true
 
 [node name="TimingRing" type="Sprite2D" parent="."]
 texture = SubResource("GradientTexture2D_w2220")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_ig0yl")
