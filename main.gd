@@ -16,6 +16,7 @@ const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 0.5
 # Maybe should be a constant instead of multiplier?
 const BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER: float = 1.05
 const BLIP_VFX_MISS_COLOR = Color(0.0, 1.0, 1.0, 1.0)
+const BLIP_VFX_GOOD_COLOR = Color(0.0, 1.0, 0.0, 1.0)
 
 var measure_time_elapsed: float = 0
 
@@ -91,6 +92,7 @@ func _input(event: InputEvent) -> void:
 				# var marker_area_to_remove = marker_areas.reduce(reduce_func, marker_areas[0])
 				# marker_area_to_remove.owner.queue_free()
 				marker_areas[0].owner.queue_free()
+				radar_blip.modulate = BLIP_VFX_GOOD_COLOR
 			else:
 				radar_blip.modulate = BLIP_VFX_MISS_COLOR
 
