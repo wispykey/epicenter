@@ -37,4 +37,5 @@ func _on_countdown_beat(_count):
 		countdown_duration = _position
 		
 		
-	
+func get_audio_stream():
+	return $AudioStreamPlayer

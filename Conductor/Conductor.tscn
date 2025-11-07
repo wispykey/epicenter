@@ -12,6 +12,7 @@ metadata/_custom_type_script = "uid://dos3qhffr4v0a"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_nwmpc")
+bus = &"Visualizer"
 
 [node name="CountdownTimer" type="Timer" parent="."]
 one_shot = true
