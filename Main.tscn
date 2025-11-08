@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://bc22jsfx801uu"]
+[gd_scene load_steps=16 format=3 uid="uid://bc22jsfx801uu"]
 
 [ext_resource type="Script" uid="uid://biukqlkr8fqtn" path="res://main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://d108280rtoc5l" path="res://song_visualizer.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://brt5ys872xpig" path="res://Player/PlayerController.tscn" id="4_cm0pq"]
+[ext_resource type="Texture2D" uid="uid://dfll8t85a5gn5" path="res://Art/magic_eye.jpg" id="4_fos0i"]
 
 [sub_resource type="Gradient" id="Gradient_cm0pq"]
 interpolation_mode = 1
@@ -95,10 +96,10 @@ position = Vector2(640, 360)
 texture = SubResource("GradientTexture2D_3dxm6")
 
 [node name="InnerBeatIndicators" type="Node2D" parent="."]
-visible = false
+modulate = Color(1, 1, 1, 0.4745098)
 
 [node name="OuterBeatIndicators" type="Node2D" parent="."]
-visible = false
+modulate = Color(1, 1, 1, 0.4745098)
 
 [node name="PlayerController" parent="." instance=ExtResource("4_cm0pq")]
 
@@ -223,3 +224,10 @@ offset_bottom = 69.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 50
 horizontal_alignment = 2
+
+[node name="MagicEye" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.827451)
+position = Vector2(626, 367.99997)
+scale = Vector2(0.68177086, 0.6175987)
+texture = ExtResource("4_fos0i")

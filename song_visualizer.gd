@@ -6,7 +6,7 @@ var audio_stream_to_visualize: AudioStreamPlayer
 var spectrum_instance
 
 const NUM_BARS: int = 64
-const MAX_FREQUENCY: float = 10000.0
+const MAX_FREQUENCY: float = 5000.0
 const MIN_Y_HEIGHT: float = 0.1
 const BAR_SPACING_RATIO: float = 0.8
 var bars = []
@@ -52,8 +52,6 @@ func _physics_process(_delta: float) -> void:
 		var magnitude = spectrum_instance.get_magnitude_for_frequency_range(freq_start, freq_end).length()
 
 		var bar_max_height = sqrt(magnitude) * 1000
-		print(magnitude)
-
 
 		bars[i].size.y = MIN_Y_HEIGHT + lerp(bars[i].size.y, bar_max_height, 0.2)
 		bars[NUM_BARS * 2 - i - 1].size.y = MIN_Y_HEIGHT + lerp(bars[i].size.y, bar_max_height, 0.2)

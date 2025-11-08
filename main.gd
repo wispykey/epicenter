@@ -30,6 +30,8 @@ const RADAR_BLIP_SIZE_INCREASE_PER_COMBO = Vector2(2, 2)
 # const BLIP_VFX_OFFSET = Vector2(-100, -100)
 
 
+const JUDGMENT_RING_ROTATION_SPEED = 1.0
+
 var current_combo: int = 0
 
 const RIGHT_MARKER_QUARTER_NOTE_POSITIONS = [
@@ -131,8 +133,11 @@ func _process(_delta: float) -> void:
 	update_indicators()
 	update_UI()
 
-func _physics_process(_delta: float) -> void:
+
+
+func _physics_process(delta: float) -> void:
 	update_debug_info()
+	rotate_judgment_rings(delta)
 
 
 func init_ring_pulses():
@@ -141,6 +146,11 @@ func init_ring_pulses():
 	Conductor.beats(4, true, 2).connect(_on_third_beat_pulse_ring3)
 	Conductor.beats(4, true, 3).connect(_on_fourth_beat_pulse_ring4)
 
+func rotate_judgment_rings(delta):
+
+	for ring in $OuterBeatIndicators.get_children():
+		ring.rotation += delta * JUDGMENT_RING_ROTATION_SPEED
+	# $OuterBeatIndicators.rotation += delta * JUDGMENT_RING_ROTATION_SPEED
 
 
 func update_UI():
