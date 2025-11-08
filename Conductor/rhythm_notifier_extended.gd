@@ -1,6 +1,9 @@
 @tool
 extends RhythmNotifier
 
+
+signal beat_marker_missed
+
 func play():
 	$AudioStreamPlayer.play()
 
@@ -39,3 +42,7 @@ func _on_countdown_beat(_count):
 		
 func get_audio_stream():
 	return $AudioStreamPlayer
+
+
+func emit_beat_marker_missed():
+	beat_marker_missed.emit()

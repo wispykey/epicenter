@@ -21,6 +21,7 @@ func _ready() -> void:
 	
 	
 func _on_timer_timeout():
+	Conductor.emit_beat_marker_missed()
 	queue_free()
 
 func update_shader_parameters(t: float):

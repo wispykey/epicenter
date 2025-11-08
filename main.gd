@@ -15,8 +15,8 @@ const MINIMUM_LIFETIME_BEFORE_DESTRUCTIBLE: float = 0.5
 # Increase above 1.0 to have correct timing align with a larger indicator ring state
 # Maybe should be a constant instead of multiplier?
 const BEAT_MARKER_TIMING_CALIBRATION_MULTIPLIER: float = 1.05
-const BLIP_VFX_MISS_COLOR = Color(0.0, 1.0, 1.0, 1.0)
-const BLIP_VFX_GOOD_COLOR = Color(0.0, 1.0, 0.0, 1.0)
+const BLIP_VFX_MISS_COLOR = Color(1.0, 0.0, 0.5, 1.0)
+const BLIP_VFX_GOOD_COLOR = Color(0.0, 1.0, 1.0, 1.0)
 
 var measure_time_elapsed: float = 0
 
@@ -25,7 +25,12 @@ const RING_INTER_DISTANCE = 141
 const FIRST_RING_DIAMETER = 297
 const FIRST_RING_X = FIRST_RING_DIAMETER / 2.0
 
-const BLIP_VFX_OFFSET = Vector2(-100, -100)
+const RADAR_BLIP_BASE_SIZE = Vector2(200, 200)
+const RADAR_BLIP_SIZE_INCREASE_PER_COMBO = Vector2(2, 2)
+# const BLIP_VFX_OFFSET = Vector2(-100, -100)
+
+
+var current_combo: int = 0
 
 const RIGHT_MARKER_QUARTER_NOTE_POSITIONS = [
 	Vector2(CENTER.x + FIRST_RING_X, CENTER.y),
@@ -81,10 +86,13 @@ func _input(event: InputEvent) -> void:
 			# Shift from 1-index to 0-index
 			var ring_index = int(which_ring[-1]) - 1
 
+			var radar_blip_size = RADAR_BLIP_BASE_SIZE + RADAR_BLIP_SIZE_INCREASE_PER_COMBO * current_combo
+			var radar_blip_position_offset = radar_blip_size / 2
+
 			if "left" in input:
-				radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] + BLIP_VFX_OFFSET
+				radar_blip.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] - radar_blip_position_offset
 			else:
-				radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] + BLIP_VFX_OFFSET
+				radar_blip.position = RIGHT_MARKER_QUARTER_NOTE_POSITIONS[ring_index] - radar_blip_position_offset
 
 
 
@@ -93,13 +101,19 @@ func _input(event: InputEvent) -> void:
 				# marker_area_to_remove.owner.queue_free()
 				marker_areas[0].owner.queue_free()
 				radar_blip.modulate = BLIP_VFX_GOOD_COLOR
+				current_combo += 1
+				print(current_combo)
 			else:
 				radar_blip.modulate = BLIP_VFX_MISS_COLOR
+				current_combo = 0
 
+			radar_blip.size = radar_blip_size
 			add_child(radar_blip)
 		
 
 func _ready() -> void:
+	Conductor.beat_marker_missed.connect(_on_beat_marker_missed)
+
 	Conductor.beats(0.0625).connect(_on_sixteenth_notes_update_time_elapsed)
 	Conductor.beats(4).connect(_on_downbeat_reset_time_elapsed)
 	Conductor.beats(4).connect(_on_third_beat_spawn_next_indicator)
@@ -115,6 +129,7 @@ func _ready() -> void:
 	
 func _process(_delta: float) -> void:
 	update_indicators()
+	update_UI()
 
 func _physics_process(_delta: float) -> void:
 	update_debug_info()
@@ -126,6 +141,10 @@ func init_ring_pulses():
 	Conductor.beats(4, true, 2).connect(_on_third_beat_pulse_ring3)
 	Conductor.beats(4, true, 3).connect(_on_fourth_beat_pulse_ring4)
 
+
+
+func update_UI():
+	$ComboLabel.text = "Combo\n%sx" % str(current_combo)
 
 func update_debug_info():
 	$PositionLabel.text = "_position: %.3f" % Conductor._position
@@ -265,3 +284,6 @@ func _on_quarter_beat_spawn_beat_markers(_count):
 				var marker = beat_marker_scene.instantiate()
 				marker.position = LEFT_MARKER_QUARTER_NOTE_POSITIONS[marker_timing - 1]
 				$BeatMarkers.add_child(marker)
+
+func _on_beat_marker_missed():
+	current_combo = 0

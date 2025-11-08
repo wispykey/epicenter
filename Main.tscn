@@ -94,9 +94,11 @@ texture = SubResource("GradientTexture2D_cm0pq")
 position = Vector2(640, 360)
 texture = SubResource("GradientTexture2D_3dxm6")
 
-[node name="InnerBeatIndicators" type="Node" parent="."]
+[node name="InnerBeatIndicators" type="Node2D" parent="."]
+visible = false
 
-[node name="OuterBeatIndicators" type="Node" parent="."]
+[node name="OuterBeatIndicators" type="Node2D" parent="."]
+visible = false
 
 [node name="PlayerController" parent="." instance=ExtResource("4_cm0pq")]
 
@@ -211,3 +213,13 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 grow_vertical = 0
 script = ExtResource("3_r0du0")
+
+[node name="ComboLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 69.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 2
